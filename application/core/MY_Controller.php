@@ -22,10 +22,15 @@ class MY_Controller extends CI_Controller {
             'angular/angular-sanitize.min.js',
             'angular/angular-touch.min.js',
             'modules/starfleet.js',
-            'controllers/starfleet.js'
+            'controllers/starfleet.js',
+            'services/StarfleetService.js',
+            'bootstrap/ui.bootstrap.min.js'
         ));
         
-        // TODO: Get bootstrap up in here!!
+        $this->addCss(array(
+            'bootstrap/bootstrap-theme.min.css',
+            'bootstrap/bootstrap.min.css'
+        ));
     }
     
     // Easily adds JavaScript files.

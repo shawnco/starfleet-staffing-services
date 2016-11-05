@@ -1,1 +1,1 @@
-var starfleet = angular.module('starfleet', ['ngRoute']);
+var starfleet = angular.module('starfleet', ['ngRoute', 'ui.bootstrap']);
