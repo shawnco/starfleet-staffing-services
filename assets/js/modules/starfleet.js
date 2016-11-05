@@ -1,0 +1,1 @@
+var starfleet = angular.module('starfleet', ['ngRoute']);
