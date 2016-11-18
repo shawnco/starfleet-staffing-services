@@ -18,4 +18,26 @@ class Starfleet extends MY_Controller {
         public function getRanks(){
             echo json_encode($this->Starfleet_model->getRanks());
         }
+        
+        // Return the current species
+        public function getSpecies(){
+            echo json_encode($this->Starfleet_model->getSpecies());
+        }
+        
+        // Return all officers.
+        public function getOfficers(){
+            echo json_encode($this->Starfleet_model->getOfficers());
+        }
+        
+        
+        // Create an officer
+        public function createOfficer(){
+            // Collect the variables and pass them to the model.
+            $fname = $this->input->get('fname');
+            $lname = $this->input->get('lname');
+            $rank = $this->input->get('rank');
+            $techLevel = $this->input->get('techLevel');
+            $species = $this->input->get('species');
+            echo json_encode($this->Starfleet_model->createOfficer($fname, $lname, $rank, $techLevel, $species));
+        }
 }

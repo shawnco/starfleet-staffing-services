@@ -1,7 +1,7 @@
 <div class="container">
     <div class='jumbotron'><h3>Starfleet Staffing Services</h3></div>
     <div class='row'>
-        <div class='col-xs-12' ng-show='alert.type !== ""' ng-class='alert.type'>{{alert.msg}}</div>
+        <div class='col-xs-12 alert-{{alert.type}}' ng-show='alert.type !== ""'>{{alert.msg}}</div>
     </div>
     <div class='row'>
         <div class='col-xs-6'>
@@ -15,10 +15,20 @@
                     </div>
                     
                     <div class='col-xs-8' ng-show='operation === "createOfficer"'>
+                        <label>Rank:</label> <select ng-model="newOfficer.rank"><option ng-repeat='rank in ranks' value='{{rank.number}}'>{{rank.title}}</option></select><br />
+                        <label>First Name:</label> <input ng-model="newOfficer.fname" /><br />
+                        <label>Last Name:</label> <input ng-model="newOfficer.lname" /><br />
+                        <label>Tech Level:</label> <select ng-model='newOfficer.techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select><br />
+                        <label>Species:</label> <select ng-model="newOfficer.species"><option ng-repeat='species in species' value='{{species.code}}'>{{species.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click="run()">Create Officer</button>
                     </div>
                     <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
+                        <label>Select an Officer:</label> <select ng-model='existingOfficer.officer'><option ng-repeat='officer in officers' value='{{officer.serviceNumber}}'>{{officer.fname}} {{officer.lname}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='run()'>Update Officer</button>
                     </div>
                     <div class='col-xs-8' ng-show='operation === "removeOfficer"'>
+                        <label>Select an Officer:</label> <select ng-model='officerToDelete.officer'><option ng-repeat='officer in officers' value='{{officer.serviceNumber}}'>{{officer.fname}} {{officer.lname}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='run()'>Delete Officer</button>                        
                     </div>                    
                     
                 </div>
@@ -33,16 +43,14 @@
                         <button class='btn btn-alternate' ng-click="setOperation('updatePosition')">Update Position</button>
                         <button class='btn btn-alternate' ng-click="setOperation('removePosition')">Remove Position</button>       
                     </div>
-                </div>
-                
-                <div class='col-xs-8' ng-show='operation === "createOfficer"'>
-                    Code to create officer form here!!
-                </div>
-                <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
-                </div>
-                <div class='col-xs-8' ng-show='operation === "removeOfficer"'>
-                </div> 
-                
+                    
+                    <div class='col-xs-8' ng-show='operation === "createPosition"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "updatePosition"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "removePosition"'>
+                    </div>                     
+                </div>                
             </div>
         </div>
     </div>
@@ -55,15 +63,14 @@
                         <button class='btn btn-primary' ng-click="setOperation('createStarship')">Create Starship</button>
                         <button class='btn btn-alternate' ng-click="setOperation('updateStarship')">Update Starship</button>
                         <button class='btn btn-alternate' ng-click="setOperation('removeStarship')">Remove Starship</button> 
-                    </div>
-
-                    <div class='col-xs-8' ng-show='operation === "createOfficer"'>
-                    </div>
-                    <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
-                    </div>
-                    <div class='col-xs-8' ng-show='operation === "removeOfficer"'>
                     </div> 
-                    
+
+                    <div class='col-xs-8' ng-show='operation === "createStarship"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "updateStarship"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "removeStarship"'>
+                    </div>                    
                 </div>
             </div>
         </div>
