@@ -24,20 +24,6 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     // The current operation. Determines which template to display.
     $scope.operation = ''
     
-    // Objects used for the views
-    $scope.newOfficer = {};
-    $scope.existingOfficer = {};
-    $scope.officerToDelete = {};
-    $scope.commissionStarship = {};
-    $scope.updateStarship = {};
-    $scope.decommissionStarship = {};
-    $scope.createPosition = {};
-    $scope.updatePosition = {};
-    $scope.deletePosition = {};
-    $scope.createClass = {};
-    $scope.updateClass = {};
-    $scope.deleteClass = {};
-    
     // Easily hide and show the appropriate forms.
     $scope.setOperation = function(op){
         $scope.operation = op;
@@ -82,6 +68,21 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     /****
      * SQL calls
      ****/
+    
+    
+    // Objects used for the views
+    $scope.newOfficer = {};
+    $scope.existingOfficer = {};
+    $scope.officerToDelete = {};
+    $scope.commissionStarship = {};
+    $scope.updateStarship = {};
+    $scope.decommissionStarship = {};
+    $scope.createPosition = {};
+    $scope.updatePosition = {};
+    $scope.deletePosition = {};
+    $scope.createClass = {};
+    $scope.updateClass = {};
+    $scope.deleteClass = {};
     
     // This is the variable that holds all the forms, their associated data, calls, and functions for handling success and failure.
     // If using this makes things too confusing, feel free to write your own controller and service calls.

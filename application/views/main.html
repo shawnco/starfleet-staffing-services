@@ -12,6 +12,7 @@
                         <button class='btn btn-primary' ng-click="setOperation('createOfficer')">Create Officer</button>
                         <button class='btn btn-alternate' ng-click="setOperation('updateOfficer')">Update Officer</button>
                         <button class='btn btn-alternate' ng-click="setOperation('removeOfficer')">Remove Officer</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('listAllOfficers')">List All Officers</button>
                     </div>
                     
                     <div class='col-xs-8' ng-show='operation === "createOfficer"'>
@@ -99,13 +100,27 @@
         <div class='col-xs-12'>
             <div class='panel'>
                 <div class='panel-header'>Report Outputs</div>
-                <div class='panel-body'>This is where the output of reports can go<br /><br />
-                    Here are the ranks!
-                    <ol>
-                        <li ng-repeat="rank in ranks">{{rank.title}}</li>
-                    </ol>
-                
-                
+                <div ng-show='operation === "listAllOfficers"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Service Number</th>
+                            <th>Rank</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Species</th>
+                            <th>Tech Level</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr ng-repeat='officer in officers'>
+                            <td>{{officer.serviceNumber}}</td>
+                            <td>{{ranks[officer.rank].title}}</td>
+                            <td>{{officer.fname}}</td>
+                            <td>{{officer.lname}}</td>
+                            <td>{{officer.species}}</td>
+                            <td>{{officer.techLevel}}</td>
+                            <td>{{officer.status}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
