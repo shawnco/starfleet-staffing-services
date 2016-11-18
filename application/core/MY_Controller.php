@@ -29,7 +29,8 @@ class MY_Controller extends CI_Controller {
         
         $this->addCss(array(
             'bootstrap/bootstrap-theme.min.css',
-            'bootstrap/bootstrap.min.css'
+            'bootstrap/bootstrap.min.css',
+            'default.css'
         ));
     }
     

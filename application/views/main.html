@@ -1,32 +1,90 @@
 <div class="container">
+    <div class='jumbotron'><h3>Starfleet Staffing Services</h3></div>
     <div class='row'>
-        <div class='col-xs-12'>Hello, {{name}}!</div>
+        <div class='col-xs-12' ng-show='alert.type !== ""' ng-class='alert.type'>{{alert.msg}}</div>
     </div>
     <div class='row'>
         <div class='col-xs-6'>
             <div class='panel'>
                 <div class='panel-header'>Manage Officers</div>
-                <div class='panel-body'>Say stuff here</div>
+                <div class='panel-body'>
+                    <div class='btn-group-vertical col-xs-4'>
+                        <button class='btn btn-primary' ng-click="setOperation('createOfficer')">Create Officer</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('updateOfficer')">Update Officer</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('removeOfficer')">Remove Officer</button>
+                    </div>
+                    
+                    <div class='col-xs-8' ng-show='operation === "createOfficer"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "removeOfficer"'>
+                    </div>                    
+                    
+                </div>
             </div>
         </div>
         <div class='col-xs-6'>
             <div class='panel'>
-                <div class='panel-header'>Manage Starships</div>
-                <div class='panel-body'>Say more stuff here.</div>
+                <div class='panel-header'>Manage Positions</div>
+                <div class='panel-body'>
+                    <div class='btn-group-vertical col-xs-4'>
+                        <button class='btn btn-primary' ng-click="setOperation('createPosition')">Create Position</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('updatePosition')">Update Position</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('removePosition')">Remove Position</button>       
+                    </div>
+                </div>
+                
+                <div class='col-xs-8' ng-show='operation === "createOfficer"'>
+                    Code to create officer form here!!
+                </div>
+                <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
+                </div>
+                <div class='col-xs-8' ng-show='operation === "removeOfficer"'>
+                </div> 
+                
             </div>
         </div>
     </div>
     <div class='row'>
         <div class='col-xs-6'>
             <div class='panel'>
-                <div class='panel-header'>Manage Positions</div>
-                <div class='panel-body'>This and Manage Starships should probably swap positions.</div>
+                <div class='panel-header'>Manage Starships</div>
+                <div class='panel-body'>
+                    <div class='btn-group-vertical col-xs-4'>
+                        <button class='btn btn-primary' ng-click="setOperation('createStarship')">Create Starship</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('updateStarship')">Update Starship</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('removeStarship')">Remove Starship</button> 
+                    </div>
+
+                    <div class='col-xs-8' ng-show='operation === "createOfficer"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "removeOfficer"'>
+                    </div> 
+                    
+                </div>
             </div>
         </div>
         <div class='col-xs-6'>
             <div class='panel'>
                 <div class='panel-header'>Manage Classes</div>
-                <div class='panel-body'>Even more things should go here.</div>
+                <div class='panel-body'>
+                    <div class='btn-group-vertical col-xs-4'>
+                        <button class='btn btn-primary' ng-click="setOperation('createClass')">Create Class</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('updateClass')">Update Class</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('removeClass')">Remove Class</button>      
+                    </div>
+                    
+                    <div class='col-xs-8' ng-show='operation === "createOfficer"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
+                    </div>
+                    <div class='col-xs-8' ng-show='operation === "removeOfficer"'>
+                    </div>  
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -34,7 +92,14 @@
         <div class='col-xs-12'>
             <div class='panel'>
                 <div class='panel-header'>Report Outputs</div>
-                <div class='panel-body'>This is where the output of reports can go</div>
+                <div class='panel-body'>This is where the output of reports can go<br /><br />
+                    Here are the ranks!
+                    <ol>
+                        <li ng-repeat="rank in ranks">{{rank.title}}</li>
+                    </ol>
+                
+                
+                </div>
             </div>
         </div>
     </div>

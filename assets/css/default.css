@@ -1,0 +1,9 @@
+.panel {
+    border: 1px solid #e2e2e2;
+}
+
+.panel-header {
+    background-color: #d5d5d5;
+    font-size: 1.4em;
+    padding-left: 5px;
+}
