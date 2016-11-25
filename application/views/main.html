@@ -24,7 +24,7 @@
                         <label>Status:</label> <select ng-model="newOfficer.status"><option ng-repeat='status in statuses' value='{{status}}'>{{status}}</option></select><br />
                         <button class='btn btn-primary' ng-click="run()">Create Officer</button>
                     </div>
-                    <div class='col-xs-8' ng-show='operation === "updateOfficer"'>{{existingOfficer}}
+                    <div class='col-xs-8' ng-show='operation === "updateOfficer"'>
                         <label>Select an Officer:</label> <select ng-model='existingOfficer.officer' ng-change='getOfficer()'><option ng-repeat='officer in officers' value='{{officer.serviceNumber}}'>{{officer.fname}} {{officer.lname}}</option></select><br />
                         <label>Rank:</label> <select ng-model="existingOfficer.rank"><option ng-repeat='rank in ranks' value='{{rank.number}}'>{{rank.title}}</option></select><br />
                         <label>First Name:</label> <input ng-model="existingOfficer.fname" /><br />
@@ -69,9 +69,9 @@
                 <div class='panel-header'>Manage Starships</div>
                 <div class='panel-body'>
                     <div class='btn-group-vertical col-xs-4'>
-                        <button class='btn btn-primary' ng-click="setOperation('createStarship')">Create Starship</button>
+                        <button class='btn btn-primary' ng-click="setOperation('commissionStarship')">Create Starship</button>
                         <button class='btn btn-alternate' ng-click="setOperation('updateStarship')">Update Starship</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('removeStarship')">Remove Starship</button> 
+                        <button class='btn btn-alternate' ng-click="setOperation('decommissionStarship')">Remove Starship</button> 
                     </div> 
 
                     <div class='col-xs-8' ng-show='operation === "commissionStarship"'>

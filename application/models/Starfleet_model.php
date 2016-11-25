@@ -94,4 +94,14 @@ class Starfleet_model extends CI_Model {
         }
         return $deleteClass && $deleteCategory;
     }
+    
+    // Get all officers in the fleet by species
+    public function getAllOfficersBySpecies(){
+        return $this->db->query("SELECT species.name, COUNT(*) FROM Officers officers JOIN Species species ON species.code = officers.species GROUP BY species.code")->result_array();
+    }
+    
+    // Get all unassigned officers
+    public function getAllUnassignedOfficers(){
+        return $this->db->query("select officers.lname, officers.fname, rank.title, species.name, officers.status from Officers officers join Species species on species.code = officers.species join Rank rank On rank.number = officers.rank where officers.serviceNumber not in (select officerID from Assignment where officerID is not null) order by officers.lname ASC")->result_array();
+    }
 }
