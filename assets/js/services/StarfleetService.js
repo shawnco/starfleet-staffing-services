@@ -45,13 +45,28 @@ starfleet.service('StarfleetService', function($q, $http){
         return deferred.promise;
     }
     
+    // Get all classes
+    this.getClasses = function(){
+        var deferred = $q.defer();
+        $http({
+            method: 'POST', 
+            url: this.api + 'getClasses'
+        }).then(function(data){
+            deferred.resolve(data.data);
+        },function(data){
+            deferred.reject(data);
+        });
+        return deferred.promise;
+    }
+    
     // Generic service call.
     this.runQuery = function(method, data){
+        console.log(data);
         var deferred = $q.defer();
         $http({
             method: 'GET',
             url: this.api + method,
-            params: data
+            params: data,
         }).then(function(data){
             deferred.resolve(data.data);
         },function(data){

@@ -21,6 +21,12 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     // The four levels of tech experience that an officer may have, and that a class belongs to.
     $scope.techLevel = [2290, 2330, 2350, 2370];
     
+    // The statuses of an officer.
+    $scope.statuses = ['Alive', 'Retired', 'Dead'];
+    
+    // Starship categories
+    $scope.categories = ['Battleship', 'Explorer', 'Science'];
+    
     // The current operation. Determines which template to display.
     $scope.operation = ''
     
@@ -65,6 +71,14 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         alertFailure('Unable to retrieve officers.');
     });
     
+    // Get all classes
+    StarfleetService.getClasses().then(function(data){
+        console.log(data);
+        $scope.classes = data;
+    },function(data){
+        alertFailure('Unable to retrieve classes.');
+    });
+    
     /****
      * SQL calls
      ****/
@@ -80,7 +94,7 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     $scope.createPosition = {};
     $scope.updatePosition = {};
     $scope.deletePosition = {};
-    $scope.createClass = {};
+    $scope.newClass = {};
     $scope.updateClass = {};
     $scope.deleteClass = {};
     
@@ -89,8 +103,23 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     operationList = {
         'createOfficer': {data: $scope.newOfficer, method: 'createOfficer', resolve: function(data){ alertSuccess('Officer added!'); }, reject: function(data){ alertFailure('Unable to create officer!'); }},
         'updateOfficer': {data: $scope.existingOfficer, method: 'updateOfficer', resolve: function(data){alertSuccess('Officer updated!');}, reject: function(data){alertFailure('Unable to update officer!');}},
-        'deleteOfficer': {data: $scope.officerToDelete, method: 'deleteOfficer', resolve: function(data){alertSuccess('Officer deleted!');}, reject: function(data){alertFailure('Unable to delete officer!');}}
+        'deleteOfficer': {data: $scope.officerToDelete, method: 'deleteOfficer', resolve: function(data){alertSuccess('Officer deleted!');}, reject: function(data){alertFailure('Unable to delete officer!');}},
+        'commissionStarship': {data: $scope.newShip, method: 'commissionStarship', resolve: function(data){alertSuccess('New starship added!');}, reject: function(data){alertFailure('Unable to commission starship!');}},
+        'decommissionStarship': {data: $scope.shipToDecommission, method: 'decommissionStarship', resolve: function(data){alertSuccess('Starship decommissioned!');}, reject: function(data){alertFailure('Unable to decommission starship!');}},
+        'createClass': {data: $scope.newClass, method: 'createClass', resolve: function(data){alertSuccess('Class created!');}, reject: function(data){alertFailure('Unable to create class!');}},
+        'updateClass': {data: $scope.updateClass, method: 'updateClass', resolve: function(data){alertSuccess('Class updated!');}, reject: function(data){alertFailure('Unable to update class!');}},
+        'deleteClass': {data: $scope.classToDelete, method: 'deleteClass', resolve: function(data){alertSuccess('Class deleted!');}, reject: function(data){alertFailure('Unable to delete class!');}}
     };
+    
+    $scope.getOfficer = function(){
+        var id = $scope.existingOfficer.officer;
+        angular.forEach($scope.officers, function(value,key){
+            if(id === value.serviceNumber){
+                $scope.existingOfficer = value;
+            }
+        });
+        console.log($scope.existingOfficer);
+    }
     
 ////     Create a new officer in the database.
 //    $scope.createOfficer = function(){
