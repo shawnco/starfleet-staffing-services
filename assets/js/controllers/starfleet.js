@@ -108,7 +108,10 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         'decommissionStarship': {data: $scope.shipToDecommission, method: 'decommissionStarship', resolve: function(data){alertSuccess('Starship decommissioned!');}, reject: function(data){alertFailure('Unable to decommission starship!');}},
         'createClass': {data: $scope.newClass, method: 'createClass', resolve: function(data){alertSuccess('Class created!');}, reject: function(data){alertFailure('Unable to create class!');}},
         'updateClass': {data: $scope.updateClass, method: 'updateClass', resolve: function(data){alertSuccess('Class updated!');}, reject: function(data){alertFailure('Unable to update class!');}},
-        'deleteClass': {data: $scope.classToDelete, method: 'deleteClass', resolve: function(data){alertSuccess('Class deleted!');}, reject: function(data){alertFailure('Unable to delete class!');}}
+        'deleteClass': {data: $scope.classToDelete, method: 'deleteClass', resolve: function(data){alertSuccess('Class deleted!');}, reject: function(data){alertFailure('Unable to delete class!');}},
+        'listAllOfficersBySpecies': {data: {}, method: 'getAllOfficersBySpecies', resolve: function(data){$scope.speciesCount = data;}, reject: function(data){alertFailure('Unable to get officers');}},
+        'listAllUnassignedOfficers': {data: {}, method: 'getAllUnassignedOfficers', resolve: function(data){$scope.unassignedOfficers = data;}, reject: function(data){alertFailure('Unable to get unassigned officers!');}},
+        'listAllVacantPositions': {data: {}, method: 'getAllVacantPositions', resolve: function(data){$scope.vacantPositions = data;}, reject: function(data){alertFailure('Unable to get vacan  positions!');}}
     };
     
     $scope.getOfficer = function(){

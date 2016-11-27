@@ -111,4 +111,19 @@ class Starfleet extends MY_Controller {
             $id = $this->input->get('id');
             echo json_encode($this->Starfleet_model->deleteClass($id));
         }
+        
+        // List all officers in Starfleet by species
+        public function getAllOfficersBySpecies(){
+            echo json_encode($this->Starfleet_model->getAllOfficersBySpecies());
+        }
+        
+        // List all unassigned officers
+        public function getAllUnassignedOfficers(){
+            echo json_encode($this->Starfleet_model->getAllUnassignedOfficers());
+        }
+        
+        // Get all vacant positions
+        public function getAllVacantPositions(){
+            echo json_encode($this->Starfleet_model->getAllVacantPositions());
+        }
 }

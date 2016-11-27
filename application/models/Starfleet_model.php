@@ -104,4 +104,9 @@ class Starfleet_model extends CI_Model {
     public function getAllUnassignedOfficers(){
         return $this->db->query("select officers.lname, officers.fname, rank.title, species.name, officers.status from Officers officers join Species species on species.code = officers.species join Rank rank On rank.number = officers.rank where officers.serviceNumber not in (select officerID from Assignment where officerID is not null) order by officers.lname ASC")->result_array();
     }
+    
+    // Get all vacant positions
+    public function getAllVacantPositions(){
+        return $this->db->query("select ship.name, station.name as position_name from Assignment assign oin Station station on station.id = assign.StationID join Starship ship on ship.registryNumber = assign.starshipID where assign.officerID is null")->result_array();
+    }
 }
