@@ -53,7 +53,7 @@ class Starfleet_model extends CI_Model {
         // Delete the starship and all assignments
         $delStarship = $this->db->query("DELETE FROM Starships WHERE registryNumber = $id");
         $delAssignment = $this->db->query("DELETE FROM Assignment WHERE starshipID = $id");
-        // Should we delete from Position as well?
+        // Should we delete from Station as well?
         return $delStarship && $delAssignment;
     }
     
@@ -107,6 +107,6 @@ class Starfleet_model extends CI_Model {
     
     // Get all vacant positions
     public function getAllVacantPositions(){
-        return $this->db->query("select ship.name, station.name as position_name from Assignment assign oin Station station on station.id = assign.StationID join Starship ship on ship.registryNumber = assign.starshipID where assign.officerID is null")->result_array();
+        return $this->db->query("select ship.name, station.name as position_name from Assignment assign join Station station on station.id = assign.StationID join Starship ship on ship.registryNumber = assign.starshipID where assign.officerID is null")->result_array();
     }
 }
