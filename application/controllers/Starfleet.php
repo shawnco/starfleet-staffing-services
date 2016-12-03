@@ -34,6 +34,10 @@ class Starfleet extends MY_Controller {
             echo json_encode($this->Starfleet_model->getClasses());
         }
         
+        // Return all starships
+        public function getStarships(){
+            echo json_encode($this->Starfleet_model->getStarships());
+        }
         
         // Create an officer
         public function createOfficer(){
@@ -72,6 +76,14 @@ class Starfleet extends MY_Controller {
             $name = $this->input->get('name');
             $class = $this->input->get('class');
             echo json_encode($this->Starfleet_model->commissionStarship($name, $class));
+        }
+        
+        // Update a starship
+        public function updateStarship(){
+            $id = $this->input->get('id');
+            $name = $this->input->get('name');
+            $class = $this->input->get('class');
+            echo json_encode($this->Starfleet_model->updateStarship($id, $name, $class));
         }
         
         // Decommission starship

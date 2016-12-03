@@ -8,6 +8,7 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     // This is the main function to do service calls.
     $scope.run = function(){
         var op = operationList[$scope.operation];
+        console.log(op);
         StarfleetService.runQuery(op.method, op.data).then(function(data){
             op.resolve(data);
         },function(data){
@@ -65,7 +66,6 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
    
     // Get all officers
     StarfleetService.getOfficers().then(function(data){
-        console.log(data);
         $scope.officers = data;
     },function(data){
         alertFailure('Unable to retrieve officers.');
@@ -73,10 +73,16 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     
     // Get all classes
     StarfleetService.getClasses().then(function(data){
-        console.log(data);
         $scope.classes = data;
     },function(data){
         alertFailure('Unable to retrieve classes.');
+    });
+    
+    // Get all starships
+    StarfleetService.getStarships().then(function(data){
+        $scope.starships = data;
+    },function(data){
+        alertFailure('Unable to retrieve starships!');
     });
     
     /****
@@ -88,9 +94,9 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     $scope.newOfficer = {};
     $scope.existingOfficer = {};
     $scope.officerToDelete = {};
-    $scope.commissionStarship = {};
-    $scope.updateStarship = {};
-    $scope.decommissionStarship = {};
+    $scope.newShip = {};
+    $scope.shipToUpdate = {};
+    $scope.shipToDecommission = {};
     $scope.createPosition = {};
     $scope.updatePosition = {};
     $scope.deletePosition = {};
@@ -105,6 +111,7 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         'updateOfficer': {data: $scope.existingOfficer, method: 'updateOfficer', resolve: function(data){alertSuccess('Officer updated!');}, reject: function(data){alertFailure('Unable to update officer!');}},
         'deleteOfficer': {data: $scope.officerToDelete, method: 'deleteOfficer', resolve: function(data){alertSuccess('Officer deleted!');}, reject: function(data){alertFailure('Unable to delete officer!');}},
         'commissionStarship': {data: $scope.newShip, method: 'commissionStarship', resolve: function(data){alertSuccess('New starship added!');}, reject: function(data){alertFailure('Unable to commission starship!');}},
+        'updateStarship': {data: $scope.shipToUpdate, method: 'updateStarship', resolve: function(data){alertSuccess('Starship updated!');}, reject: function(data){alertFailure('Unable to update starship!');}},
         'decommissionStarship': {data: $scope.shipToDecommission, method: 'decommissionStarship', resolve: function(data){alertSuccess('Starship decommissioned!');}, reject: function(data){alertFailure('Unable to decommission starship!');}},
         'createClass': {data: $scope.newClass, method: 'createClass', resolve: function(data){alertSuccess('Class created!');}, reject: function(data){alertFailure('Unable to create class!');}},
         'updateClass': {data: $scope.updateClass, method: 'updateClass', resolve: function(data){alertSuccess('Class updated!');}, reject: function(data){alertFailure('Unable to update class!');}},
@@ -118,10 +125,60 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         var id = $scope.existingOfficer.officer;
         angular.forEach($scope.officers, function(value,key){
             if(id === value.serviceNumber){
-                $scope.existingOfficer = value;
+                
+                // Better do it all manually.
+                $scope.existingOfficer.officer = value.serviceNumber;
+                $scope.existingOfficer.rank = value.rank;
+                $scope.existingOfficer.fname = value.fname;
+                $scope.existingOfficer.lname = value.lname;
+                $scope.existingOfficer.techLevel = value.techLevel;
+                $scope.existingOfficer.species = value.species;
+                $scope.existingOfficer.status = value.status;
             }
         });
-        console.log($scope.existingOfficer);
+    };
+    
+    $scope.getStarship = function(){
+        console.log($scope.shipToUpdate);
+        var id = $scope.shipToUpdate.id;
+        angular.forEach($scope.starships, function(value,key){
+            if(id === value.registryNumber){
+                $scope.shipToUpdate.id = value.registryNumber;
+                $scope.shipToUpdate.name = value.name;
+                $scope.shipToUpdate.class = value.class;
+            }
+        });
+    };
+    
+    $scope.getClass = function(){
+        var id = $scope.updateClass.id;
+        angular.forEach($scope.classes, function(value,key){
+            if(id === value.id){
+                $scope.updateClass.id = value.id;
+                $scope.updateClass.name = value.name;
+                $scope.updateClass.category = value.category;
+                $scope.updateClass.crewSize = value.crewSize;
+                $scope.updateClass.maxSpeed = value.maxSpeed;
+                $scope.updateClass.fuelCapacity = value.fuelCapacity;
+                $scope.updateClass.techLevel = value.techLevel;
+                
+                switch ($scope.updateClass.category) {
+                    case 'Battleship':
+                        $scope.updateClass.phaserStrength = value.phaserStrength;
+                        $scope.updateClass.torpedoType = value.torpedoType;
+                        break;
+                    case 'Explorer':
+                        $scope.updateClass.regionSpecialty = value.regionSpecialty;
+                        break;
+                    case 'Science':
+                        $scope.updateClass.sensorRange = value.sensorRange;
+                        $scope.updateClass.labType = value.labType;
+                        break;
+                    default:
+                        alertFailure('There was an error retrieving class.');
+                }
+            }
+        })
     }
     
 ////     Create a new officer in the database.

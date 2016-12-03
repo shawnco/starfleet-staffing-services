@@ -26,6 +26,11 @@ class Starfleet_model extends CI_Model {
         return $this->db->query("SELECT * FROM Class ORDER BY id")->result_array();
     }
     
+    // Return a list of starships.
+    public function getStarships(){
+        return $this->db->query('SELECT * FROM Starship')->result_array();
+    }
+    
     // Adds an officer to the database.
     public function createOfficer($fname, $lname, $rank, $techLevel, $species, $status){
         return $this->db->query("INSERT INTO Officers (fname, lname, rank, techLevel, species, status) VALUES ('$fname', '$lname', $rank, $techLevel, $species, '$status')");
@@ -33,7 +38,7 @@ class Starfleet_model extends CI_Model {
     
     // Updates an officer in the database.
     public function updateOfficer($serviceNumber, $fname, $lname, $rank, $techLevel, $species, $status){
-        return $this->db->query("UPDATE Officers SET fname = '$fname', lname = '$lname', rank = $rank', techLevel = $techLevel, species = $species', status = '$status' WHERE serviceNumber = $serviceNumber");
+        return $this->db->query("UPDATE Officers SET fname = '$fname', lname = '$lname', rank = $rank, techLevel = $techLevel, species = $species, status = '$status' WHERE serviceNumber = $serviceNumber");
     }    
     
     // Delete an officer
@@ -43,15 +48,20 @@ class Starfleet_model extends CI_Model {
     
     // Commission starship
     public function commissionStarship($name, $class){
-        return $this->db->query("INSERT INTO Starships (name, class) VALUES ('$name', $class)");
+        return $this->db->query("INSERT INTO Starship (name, class) VALUES ('$name', $class)");
         
         // This should probably return a registry ID as well as call a trigger to put crew on the ship.
+    }
+    
+    // Update a starship
+    public function updateStarship($id, $name, $class){
+        return $this->db->query("UPDATE Starship SET name = '$name', class = $class WHERE registryNumber = $id");
     }
     
     // Decommission starhip
     public function decommissionStarship($id){
         // Delete the starship and all assignments
-        $delStarship = $this->db->query("DELETE FROM Starships WHERE registryNumber = $id");
+        $delStarship = $this->db->query("DELETE FROM Starship WHERE registryNumber = $id");
         $delAssignment = $this->db->query("DELETE FROM Assignment WHERE starshipID = $id");
         // Should we delete from Station as well?
         return $delStarship && $delAssignment;
@@ -97,7 +107,7 @@ class Starfleet_model extends CI_Model {
     
     // Get all officers in the fleet by species
     public function getAllOfficersBySpecies(){
-        return $this->db->query("SELECT species.name, COUNT(*) FROM Officers officers JOIN Species species ON species.code = officers.species GROUP BY species.code")->result_array();
+        return $this->db->query("SELECT species.name, COUNT(*) AS cnt FROM Officers officers JOIN Species species ON species.code = officers.species GROUP BY species.code")->result_array();
     }
     
     // Get all unassigned officers

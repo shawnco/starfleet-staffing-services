@@ -13,7 +13,7 @@
                         <button class='btn btn-alternate' ng-click="setOperation('updateOfficer')">Update Officer</button>
                         <button class='btn btn-alternate' ng-click="setOperation('deleteOfficer')">Remove Officer</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listAllOfficers')">List All Officers</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('listAllOfficersByspecies')">List All Officers By Species</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('listAllOfficersBySpecies'); run();">List All Officers By Species</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listAllUnassignedOfficers')">List All Unassigned Officers</button>
                     </div>
                     
@@ -79,13 +79,16 @@
 
                     <div class='col-xs-6' ng-show='operation === "commissionStarship"'>
                         <label>Name:</label> <input type='text' ng-model='newShip.name' /><br />
-                        <label>Class:</label> <select ng-model='newShip.class'><option ng-repeat='class in classes'><option value='{{class.id}}'>{{class.name}}</option></select>
+                        <label>Class:</label> <select ng-model='newShip.class'><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select>
                         <button class='btn btn-primary' ng-click='run()'>Commission Starship</button>                        
                     </div>
                     <div class='col-xs-6' ng-show='operation === "updateStarship"'>
+                        <label>Name:</label> <select ng-model='shipToUpdate.id' ng-change='getStarship();' /><option></option><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select><br />
+                        <label>Class:</label> <select ng-model='shipToUpdate.class' /><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='run()'>Update Starship</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "decommissionStarship"'>
-                        <label>Name:</label> <select ng-model='shipToDecommission.id'><option ng-repeat='ship in starships'><option value='{{ship.registryNumber}}'>{{ship.name}}</option></select>
+                        <label>Name:</label> <select ng-model='shipToDecommission.id'><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select>
                         <button class='btn btn-primary' ng-click='run()'>Decommission Starship</button>
                     </div>                    
                 </div>
@@ -103,8 +106,8 @@
                     
                     <div class='col-xs-6' ng-show='operation === "createClass"'>
                         <label>Name:</label> <input type='text' ng-model='newClass.name' /><br />
-                        <select ng-model='newClass.category'><option ng-repeat='category in categories' value='{{category}}'>{{category}}</option></select>
-                        <label>New Class:</label> <input type='text' ng-model='newClass.crewSize' /><br />
+                        <label>Category:</label> <select ng-model='newClass.category'><option ng-repeat='category in categories' value='{{category}}'>{{category}}</option></select><br />
+                        <label>Crew Size:</label> <input type='text' ng-model='newClass.crewSize' /><br />
                         <label>Max Speed:</label> <input type='text' ng-model='newClass.maxSpeed' /><br />
                         <label>Fuel Capacity:</label> <input type='text' ng-model='newClass.fuelCapacity' /><br />
                         <label>Tech Level:</label> <select ng-model='newClass.techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select>
@@ -122,8 +125,7 @@
                         
                     </div>
                     <div class='col-xs-6' ng-show='operation === "updateClass"'>
-                        <label>Name:</label> <input type='text' ng-model='updateClass.name' /><br />
-                        <select ng-model='updateClass.category'><option ng-repeat='category in categories' value='{{category}}'>{{category}}</option></select>
+                        <label>Name:</label> <select ng-model='updateClass.id' ng-change='getClass()' /><option></option><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
                         <label>New Class:</label> <input type='text' ng-model='updateClass.crewSize' /><br />
                         <label>Max Speed:</label> <input type='text' ng-model='updateClass.maxSpeed' /><br />
                         <label>Fuel Capacity:</label> <input type='text' ng-model='updateClass.fuelCapacity' /><br />
@@ -183,8 +185,8 @@
                             <th>Count</th>
                         </tr>
                         <tr ng-repeat='row in speciesCount'>
-                            <td>{{row.species}}</td>
-                            <td>{{row.count}}</td>
+                            <td>{{row.name}}</td>
+                            <td>{{row.cnt}}</td>
                         </tr>
                     </table>
                 </div>

@@ -59,6 +59,20 @@ starfleet.service('StarfleetService', function($q, $http){
         return deferred.promise;
     }
     
+    // Get all starships
+    this.getStarships = function(){
+        var deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: this.api + 'getStarships'
+        }).then(function(data){
+            deferred.resolve(data.data);
+        },function(data){
+            deferred.reject();
+        });
+        return deferred.promise;
+    }
+    
     // Generic service call.
     this.runQuery = function(method, data){
         console.log(data);
