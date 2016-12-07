@@ -14,29 +14,9 @@ class Starfleet extends MY_Controller {
                 $this->load->view('template/footer', $this->data);
 	}
         
-        // Return the current ranks.
-        public function getRanks(){
-            echo json_encode($this->Starfleet_model->getRanks());
-        }
-        
-        // Return the current species
-        public function getSpecies(){
-            echo json_encode($this->Starfleet_model->getSpecies());
-        }
-        
-        // Return all officers.
-        public function getOfficers(){
-            echo json_encode($this->Starfleet_model->getOfficers());
-        }
-        
-        // Return all classes.
-        public function getClasses(){
-            echo json_encode($this->Starfleet_model->getClasses());
-        }
-        
-        // Return all starships
-        public function getStarships(){
-            echo json_encode($this->Starfleet_model->getStarships());
+        // Get starting data
+        public function getData(){
+            echo json_encode($this->Starfleet_model->getData());
         }
         
         // Create an officer
@@ -104,7 +84,7 @@ class Starfleet extends MY_Controller {
             if($category === 'Battleship'){
                 $phaserStrength = $this->input->get('phaserStrength');
                 $torpedoType = $this->input->get('torpedoType');
-                echo json_encode($this->Starfleet_model->createBattleship($name, $crewSize, $maxSpeed, $fuelCapacity, $techLevel, $phaserStength, $torpedoType));
+                echo json_encode($this->Starfleet_model->createBattleship($name, $crewSize, $maxSpeed, $fuelCapacity, $techLevel, $phaserStrength, $torpedoType));
             }else if($category === 'Explorer'){
                 $regionSpecialty = $this->input->get('regionSpeciality');
                 echo json_encode($this->Starfleet_model->createExplorer($name, $crewSize, $maxSpeed, $fuelCapacity, $techLevel, $regionSpecialty));
@@ -120,6 +100,7 @@ class Starfleet extends MY_Controller {
         
         // Remove class
         public function deleteClass(){
+            var_dump($this->input->get());
             $id = $this->input->get('id');
             echo json_encode($this->Starfleet_model->deleteClass($id));
         }

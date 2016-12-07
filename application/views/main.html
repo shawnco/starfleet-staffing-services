@@ -27,17 +27,18 @@
                         <button class='btn btn-primary' ng-click="run()">Create Officer</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "updateOfficer"'>
-                        <label>Select an Officer:</label> <select ng-model='existingOfficer.officer' ng-change='getOfficer()'><option ng-repeat='officer in officers' value='{{officer.serviceNumber}}'>{{officer.fname}} {{officer.lname}}</option></select><br />
-                        <label>Rank:</label> <select ng-model="existingOfficer.rank"><option ng-repeat='rank in ranks' value='{{rank.number}}'>{{rank.title}}</option></select><br />
-                        <label>First Name:</label> <input ng-model="existingOfficer.fname" /><br />
-                        <label>Last Name:</label> <input ng-model="existingOfficer.lname" /><br />
-                        <label>Tech Level:</label> <select ng-model='existingOfficer.techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select><br />
-                        <label>Species:</label> <select ng-model="existingOfficer.species"><option ng-repeat='species in species' value='{{species.code}}'>{{species.name}}</option></select><br />
-                        <label>Status:</label> <select ng-model="existingOfficer.status"><option ng-repeat='status in statuses' value='{{status}}'>{{status}}</option></select><br />                        
+                        <label>Select an Officer:</label> <select ng-model='officerIndex'><option></option><option ng-repeat='officer in officers track by $index' value='{{$index}}'>{{officer.fname}} {{officer.lname}}</option></select>
+                        <label>Rank:</label> <select ng-model='officers[officerIndex].rank'><option ng-repeat='rank in ranks' value='{{rank.number}}'>{{rank.title}}</option></select><br />
+                        <label>First Name:</label> <input ng-model="officers[officerIndex].fname" /><br />
+                        <label>Last Name:</label> <input ng-model="officers[officerIndex].lname" /><br />
+                        <label>Tech Level:</label> <select ng-model='officers[officerIndex].techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select><br />
+                        <label>Species:</label> <select ng-model="officers[officerIndex].species"><option ng-repeat='species in species' value='{{species.code}}'>{{species.name}}</option></select><br />
+                        <label>Status:</label> <select ng-model="officers[officerIndex].status"><option ng-repeat='status in statuses' value='{{status}}'>{{status}}</option></select><br />                          
+
                         <button class='btn btn-primary' ng-click="run()">Update Officer</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "deleteOfficer"'>
-                        <label>Select an Officer:</label> <select ng-model='officerToDelete.officer'><option ng-repeat='officer in officers' value='{{officer.serviceNumber}}'>{{officer.fname}} {{officer.lname}}</option></select><br />
+                        <label>Select an Officer:</label> <select ng-model='officerIndex'><option ng-repeat='officer in officers' value='{{officer.serviceNumber}}'>{{officer.fname}} {{officer.lname}}</option></select><br />
                         <button class='btn btn-primary' ng-click='run()'>Delete Officer</button>                        
                     </div>                    
                     
@@ -56,11 +57,24 @@
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createPosition"'>
-
+                        <label>Code:</label> <input type='text' ng-model='newPosition.code' /><br />                        
+                        <label>Name:</label> <input type='text' ng-model='newPosition.name' /><br />
+                        <label>Suggested Rank:</label> <select ng-model='newPosition.suggestedRank'><option></option><option ng-repeat='rank in ranks' value='{{rank.number}}'>{{rank.title}}</option></select><br />
+                        <label>Suggested Experience:</label> <input type='text' ng-model='newPosition.suggestedExp' /><br />
+                        <label>Department:</label> <select ng-model='newPosition.department'><option></option><option ng-repeat='dept in departments' value='{{dept.name}}'>{{dept.name}}</option></select>
+                        <button class='btn btn-primary' ng-click='run()'>Create Position</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "updatePosition"'>
+                        <label>Code:</label> <select ng-model='positionIndex'><option ng-repeat='position in positions track by $index' value='{{$index}}'>{{position.code}}</option></select><br />                        
+                        <label>Name:</label> <input type='text' ng-model='positions[positionIndex].name' /><br />
+                        <label>Suggested Rank:</label> <select ng-model='positions[positionIndex].suggestedRank'><option></option><option ng-repeat='rank in ranks' value='{{rank.number}}'>{{rank.title}}</option></select><br />
+                        <label>Suggested Experience:</label> <input type='text' ng-model='positions[positionIndex].suggestedExp' /><br />
+                        <label>Department:</label> <select ng-model='positions[positionIndex].department'><option></option><option ng-repeat='dept in departments' value='{{dept.name}}'>{{dept.name}}</option></select>
+                        <button class='btn btn-primary' ng-click='run()'>Update Position</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "removePosition"'>
+                        <label>Name:</label> <select ng-model='positionIndex'><option ng-repeat='position in positions' value='{{position.code}}'>{{position.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='run()'>Delete Position</button>
                     </div>                     
                 </div>                
             </div>
@@ -82,13 +96,13 @@
                         <label>Class:</label> <select ng-model='newShip.class'><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select>
                         <button class='btn btn-primary' ng-click='run()'>Commission Starship</button>                        
                     </div>
-                    <div class='col-xs-6' ng-show='operation === "updateStarship"'>
-                        <label>Name:</label> <select ng-model='shipToUpdate.id' ng-change='getStarship();' /><option></option><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select><br />
-                        <label>Class:</label> <select ng-model='shipToUpdate.class' /><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
+                    <div class='col-xs-6' ng-show='operation === "updateStarship"'>   
+                        <label>Name:</label> <select ng-model='shipIndex'><option></option><option ng-repeat='ship in starships track by $index' value='{{$index}}'>{{ship.name}}</option></select>
+                        <label>Class:</label> <select ng-model='starships[shipIndex].class' /><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select>
                         <button class='btn btn-primary' ng-click='run()'>Update Starship</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "decommissionStarship"'>
-                        <label>Name:</label> <select ng-model='shipToDecommission.id'><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select>
+                        <label>Name:</label> <select ng-model='shipIndex'><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select>
                         <button class='btn btn-primary' ng-click='run()'>Decommission Starship</button>
                     </div>                    
                 </div>
@@ -101,7 +115,7 @@
                     <div class='btn-group-vertical col-xs-6'>
                         <button class='btn btn-primary' ng-click="setOperation('createClass')">Create Class</button>
                         <button class='btn btn-alternate' ng-click="setOperation('updateClass')">Update Class</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('removeClass')">Remove Class</button>      
+                        <button class='btn btn-alternate' ng-click="setOperation('deleteClass')">Remove Class</button>      
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createClass"'>
@@ -113,7 +127,7 @@
                         <label>Tech Level:</label> <select ng-model='newClass.techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select>
                         <div ng-if='newClass.category === "Battleship"'>
                             <label>Phaser Strength:</label> <input type='text' ng-model='newClass.phaserStrength' /><br />
-                            <label>Torpedo Type:</label> <input type='text' ng-model='newclass.torpedoType' /><br />
+                            <label>Torpedo Type:</label> <input type='text' ng-model='newClass.torpedoType' /><br />
                         </div>
                         <div ng-if='newClass.category === "Explorer"'>
                             <label>Region Specialty:</label> <input type='text' ng-model='newClass.regionSpecialty' /><br />
@@ -122,28 +136,30 @@
                             <label>Sensor Range:</label> <input type='text' ng-model='newClass.sensorRange' /><br />
                             <label>Lab Type:</label> <input type='text' ng-model='newclass.labType' /><br />                            
                         </div>
-                        
+                        <button class='btn btn-primary' ng-click='run()'>Create Class</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "updateClass"'>
-                        <label>Name:</label> <select ng-model='updateClass.id' ng-change='getClass()' /><option></option><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
-                        <label>New Class:</label> <input type='text' ng-model='updateClass.crewSize' /><br />
-                        <label>Max Speed:</label> <input type='text' ng-model='updateClass.maxSpeed' /><br />
-                        <label>Fuel Capacity:</label> <input type='text' ng-model='updateClass.fuelCapacity' /><br />
-                        <label>Tech Level:</label> <select ng-model='updateClass.techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select>
+                        <label>Name:</label> <select ng-model='classIndex' /><option></option><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
+                        <label>New Class:</label> <input type='text' ng-model='classes[classIndex].crewSize' /><br />
+                        <label>Max Speed:</label> <input type='text' ng-model='classes[classIndex].maxSpeed' /><br />
+                        <label>Fuel Capacity:</label> <input type='text' ng-model='classes[classIndex].fuelCapacity' /><br />
+                        <label>Tech Level:</label> <select ng-model='classes[classIndex].techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select>
                         <div ng-if='updateClass.category === "Battleship"'>
-                            <label>Phaser Strength:</label> <input type='text' ng-model='updateClass.phaserStrength' /><br />
-                            <label>Torpedo Type:</label> <input type='text' ng-model='updateclass.torpedoType' /><br />
+                            <label>Phaser Strength:</label> <input type='text' ng-model='classes[classIndex].phaserStrength' /><br />
+                            <label>Torpedo Type:</label> <input type='text' ng-model='classes[classIndex].torpedoType' /><br />
                         </div>
                         <div ng-if='updateClass.category === "Explorer"'>
-                            <label>Region Specialty:</label> <input type='text' ng-model='updateClass.regionSpecialty' /><br />
+                            <label>Region Specialty:</label> <input type='text' ng-model='classes[classIndex].regionSpecialty' /><br />
                         </div>
                         <div ng-if='updateClass.category === "Science"'>
-                            <label>Sensor Range:</label> <input type='text' ng-model='updateClass.sensorRange' /><br />
-                            <label>Lab Type:</label> <input type='text' ng-model='updateclass.labType' /><br />                            
-                        </div>                        
+                            <label>Sensor Range:</label> <input type='text' ng-model='classes[classIndex].sensorRange' /><br />
+                            <label>Lab Type:</label> <input type='text' ng-model='classes[classIndex].labType' /><br />                            
+                        </div> 
+                        <button class='btn btn-primary' ng-click='run()'>Update Class</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "deleteClass"'>
-                        <label>Name:</label> <select ng-model='classToDelete.id'><option ng-repeat='class in classes' value='{{class.id}}'>{{class.id}}</option></select>
+                        <label>Name:</label> <select ng-model='classIndex'><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='run()'>Delete Class</button>
                     </div>  
                     
                 </div>

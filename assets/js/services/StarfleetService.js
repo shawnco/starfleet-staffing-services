@@ -2,76 +2,20 @@
 starfleet.service('StarfleetService', function($q, $http){
     this.api = 'http://lvh.me/starfleet-staffing-services/index.php/Starfleet/';
     
-    // Get all the ranks.
-    this.getRanks = function(){
-        console.log('called');
+    // Initial service call.
+    this.getData = function(){
         var deferred = $q.defer();
         $http({
             method: 'GET',
-            url: this.api + 'getRanks'
+            url: this.api + 'getData'
         }).then(function(data){
-            deferred.resolve(data.data);
-        },function(data){
-            deferred.reject(data);
-        });
-        return deferred.promise;
-    },
-    
-    // Get all species.
-    this.getSpecies = function(){
-        var deferred = $q.defer();
-        $http({
-            method: 'GET',
-            url: this.api + 'getSpecies'
-        }).then(function(data){
-            deferred.resolve(data.data);
-        },function(data){
-            deferred.reject(data);
-        });
-        return deferred.promise;
-    },
-    
-    // Get all officers
-    this.getOfficers = function(){
-        var deferred = $q.defer();
-        $http({
-            method: 'POST',
-            url: this.api + 'getOfficers'
-        }).then(function(data){
-            deferred.resolve(data.data);
-        },function(data){
-            deferred.reject(data);
-        });
-        return deferred.promise;
-    }
-    
-    // Get all classes
-    this.getClasses = function(){
-        var deferred = $q.defer();
-        $http({
-            method: 'POST', 
-            url: this.api + 'getClasses'
-        }).then(function(data){
-            deferred.resolve(data.data);
-        },function(data){
-            deferred.reject(data);
-        });
-        return deferred.promise;
-    }
-    
-    // Get all starships
-    this.getStarships = function(){
-        var deferred = $q.defer();
-        $http({
-            method: 'POST',
-            url: this.api + 'getStarships'
-        }).then(function(data){
+            console.log(data);
             deferred.resolve(data.data);
         },function(data){
             deferred.reject();
         });
         return deferred.promise;
-    }
+    } 
     
     // Generic service call.
     this.runQuery = function(method, data){

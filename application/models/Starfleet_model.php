@@ -6,29 +6,17 @@ class Starfleet_model extends CI_Model {
         $this->load->database();
     }
     
-    // Return a list of ranks.
-    public function getRanks(){
-        return $this->db->query('SELECT * FROM Rank')->result_array();
-    }
-    
-    // Return a list of species.
-    public function getSpecies(){
-        return $this->db->query('SELECT * FROM Species')->result_array();
-    }
-    
-    // Return a list of officers.
-    public function getOfficers(){
-        return $this->db->query('SELECT * FROM Officers ORDER BY serviceNumber')->result_array();
-    }
-    
-    // Return a list of classes.
-    public function getClasses(){
-        return $this->db->query("SELECT * FROM Class ORDER BY id")->result_array();
-    }
-    
-    // Return a list of starships.
-    public function getStarships(){
-        return $this->db->query('SELECT * FROM Starship')->result_array();
+    // Get starting info.
+    public function getData(){
+        $output = array();
+        $output['ranks'] = $this->db->query('SELECT * FROM Rank')->result_array();
+        $output['species'] = $this->db->query('SELECT * FROM Species ORDER BY name')->result_array();
+        $output['officers'] = $this->db->query('SELECT * FROM Officers ORDER BY serviceNumber')->result_array();
+        $output['classes'] = $this->db->query('SELECT * FROM Class ORDER BY id')->result_array();
+        $output['starships'] = $this->db->query('SELECT * FROM Starship ORDER BY name')->result_array();
+        $output['positions'] = $this->db->query('SELECT * FROM Station ORDER BY name')->result_array();
+        $output['departments'] = $this->db->query('SELECT * FROM Department ORDER BY name')->result_array();
+        return $output;
     }
     
     // Adds an officer to the database.
@@ -68,7 +56,7 @@ class Starfleet_model extends CI_Model {
     }
     
     // Create a battleship
-    public function createBattleship($name, $crewSize, $maxSpeed, $fuelCapacity, $techLevel, $phaserStength, $torpedoType){
+    public function createBattleship($name, $crewSize, $maxSpeed, $fuelCapacity, $techLevel, $phaserStrength, $torpedoType){
         $createClass = $this->db->query("INSERT INTO Class (name, crewSize, maxSpeed, fuelCapacity, techLevel) VALUES ('$name', $crewSize, $maxSpeed, $fuelCapacity, $techLevel)");
         $id = $this->db->insert_id();
         $createBattleship = $this->db->query("INSERT INTO Battleship (id, phaserStrength, torpedoType) VALUES ($id, $phaserStrength, $torpedoType)");
@@ -93,15 +81,17 @@ class Starfleet_model extends CI_Model {
     
     // Delete starship class
     public function deleteClass($id){
-        $category = $this->db->query("SELECT category FROM Class WHERE id = $id")->result_array()['category'];
-        $deleteClass = $this->db->query("DELETE FROM Class WHERE id = $id");
-        if($category === 'Battleship'){
+        if(count($this->db->query("SELECT * FROM Battleship WHERE id = $id")->result_array()) > 0){
             $deleteCategory = $this->db->query("DELETE FROM Battleship WHERE id = $id");
-        }else if($category === 'Explorer'){
+        }else if(count($this->db->query("SELECT * FROM Explorer WHERE id = $id")->result_array()) > 0){
             $deleteCategory = $this->db->query("DELETE FROM Explorer WHERE id = $id");
-        }else if($category === 'Science'){
+        }else if(count($this->db->query("SELECT * FROM Science WHERE id = $id")->result_array()) > 0){
             $deleteCategory = $this->db->quere("DELETE FROM Science WHERE id = $id");
+        }else{
+            $deleteCategory = FALSE;
         }
+        $deleteClass = $this->db->query("DELETE FROM Class WHERE id = $id");
+        
         return $deleteClass && $deleteCategory;
     }
     
