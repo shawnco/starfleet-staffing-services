@@ -34,7 +34,7 @@ class Starfleet extends MY_Controller {
         // Create an officer
         public function updateOfficer(){
             // Collect the variables and pass them to the model.
-            $serviceNumber = $this->input->get('officer');
+            $serviceNumber = $this->input->get('serviceNumber');
             $fname = $this->input->get('fname');
             $lname = $this->input->get('lname');
             $rank = $this->input->get('rank');
@@ -46,8 +46,7 @@ class Starfleet extends MY_Controller {
         
         // Delete an officer
         public function deleteOfficer(){
-            $id = $this->input->get('officer');
-            var_dump($this->input->get());
+            $id = $this->input->get('serviceNumber');
             echo json_encode($this->Starfleet_model->deleteOfficer($id));
         }
         
@@ -60,7 +59,7 @@ class Starfleet extends MY_Controller {
         
         // Update a starship
         public function updateStarship(){
-            $id = $this->input->get('id');
+            $id = $this->input->get('registryNumber');
             $name = $this->input->get('name');
             $class = $this->input->get('class');
             echo json_encode($this->Starfleet_model->updateStarship($id, $name, $class));
@@ -68,12 +67,20 @@ class Starfleet extends MY_Controller {
         
         // Decommission starship
         public function decommissionStarship(){
-            $id = $this->input->get('id');
+            var_dump($this->input->get());
+            $id = $this->input->get('registryNumber');
             echo json_encode($this->Starfleet_model->decommissionStarship($id));
+        }
+        
+        // Destroy starship
+        public function destroyStarship(){
+            $registryNumber = $this->input->get('registryNumber');
+            echo json_encode($this->Starfleet_model->destroyStarship($registryNumber));
         }
         
         // Create class
         public function createClass(){
+//            var_dump($this->input->get());
             $name = $this->input->get('name');
             $crewSize = $this->input->get('crewSize');
             $maxSpeed = $this->input->get('maxSpeed');
@@ -86,7 +93,7 @@ class Starfleet extends MY_Controller {
                 $torpedoType = $this->input->get('torpedoType');
                 echo json_encode($this->Starfleet_model->createBattleship($name, $crewSize, $maxSpeed, $fuelCapacity, $techLevel, $phaserStrength, $torpedoType));
             }else if($category === 'Explorer'){
-                $regionSpecialty = $this->input->get('regionSpeciality');
+                $regionSpecialty = $this->input->get('regionSpecialty');
                 echo json_encode($this->Starfleet_model->createExplorer($name, $crewSize, $maxSpeed, $fuelCapacity, $techLevel, $regionSpecialty));
             }else if($category === 'Science'){
                 $sensorRange = $this->input->get('sensorRange');
@@ -96,13 +103,41 @@ class Starfleet extends MY_Controller {
         }
         
         // Update class
-        
+        public function updateClass(){
+            var_dump($this->input->get());
+        }
         
         // Remove class
         public function deleteClass(){
-            var_dump($this->input->get());
+//            var_dump($this->input->get());
             $id = $this->input->get('id');
             echo json_encode($this->Starfleet_model->deleteClass($id));
+        }
+        
+        // Create position
+        public function createPosition(){
+            // code, name, suggestedRank, suggestExp, department
+            $code = $this->input->get('code');
+            $name = $this->input->get('name');
+            $suggestedRank = $this->input->get('suggestedRank');
+            $suggestedExp = $this->input->get('suggestedExp');
+            $department = $this->input->get('department');
+            echo json_encode($this->Starfleet_model->createPosition($code, $name, $suggestedRank, $suggestedExp, $department));
+        }
+        
+        // Update position
+        public function updatePosition(){
+            $code = $this->input->get('code');
+            $name = $this->input->get('name');
+            $suggestedRank = $this->input->get('suggestedRank');
+            $suggestedExp = $this->input->get('suggestedExp');
+            $department = $this->input->get('department');
+            echo json_encode($this->Starfleet_model->updatePosition($code, $name, $suggestedRank, $suggestedExp, $department));
+        }        
+        
+        // Delete position
+        public function deletePosition($code){
+            echo json_encode($this->Starfleet_model->deletePosition($code));
         }
         
         // List all officers in Starfleet by species
@@ -118,5 +153,21 @@ class Starfleet extends MY_Controller {
         // Get all vacant positions
         public function getAllVacantPositions(){
             echo json_encode($this->Starfleet_model->getAllVacantPositions());
+        }
+        
+        // Get all classes by tech level
+        public function getClassesByTechLevel(){
+            echo json_encode($this->Starfleet_model->getClassesByTechLevel());
+        }
+        
+        // Get all officers of species on starship
+        public function getSpeciesOnStarship(){
+            $registryNumber = $this->input->get('registryNumber');
+            echo json_encode($this->Starfleet_model->getSpeciesOnStarship($registryNumber));
+        }
+        
+        // Get all officers in department by species
+        public function getOfficersInDepartmentBySpecies(){
+            echo json_encode($this->Starfleet_model->getOfficersInDepartmentBySpecies());
         }
 }

@@ -15,6 +15,7 @@
                         <button class='btn btn-alternate' ng-click="setOperation('listAllOfficers')">List All Officers</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listAllOfficersBySpecies'); run();">List All Officers By Species</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listAllUnassignedOfficers')">List All Unassigned Officers</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('getOfficersInDepartmentBySpecies'); run()">List All Officers in Dept By Species</button>
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createOfficer"'>
@@ -35,11 +36,11 @@
                         <label>Species:</label> <select ng-model="officers[officerIndex].species"><option ng-repeat='species in species' value='{{species.code}}'>{{species.name}}</option></select><br />
                         <label>Status:</label> <select ng-model="officers[officerIndex].status"><option ng-repeat='status in statuses' value='{{status}}'>{{status}}</option></select><br />                          
 
-                        <button class='btn btn-primary' ng-click="run()">Update Officer</button>
+                        <button class='btn btn-primary' ng-click="updateOfficer(officerIndex)">Update Officer</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "deleteOfficer"'>
                         <label>Select an Officer:</label> <select ng-model='officerIndex'><option ng-repeat='officer in officers' value='{{officer.serviceNumber}}'>{{officer.fname}} {{officer.lname}}</option></select><br />
-                        <button class='btn btn-primary' ng-click='run()'>Delete Officer</button>                        
+                        <button class='btn btn-primary' ng-click='deleteOfficer(officerIndex)'>Delete Officer</button>                        
                     </div>                    
                     
                 </div>
@@ -70,11 +71,11 @@
                         <label>Suggested Rank:</label> <select ng-model='positions[positionIndex].suggestedRank'><option></option><option ng-repeat='rank in ranks' value='{{rank.number}}'>{{rank.title}}</option></select><br />
                         <label>Suggested Experience:</label> <input type='text' ng-model='positions[positionIndex].suggestedExp' /><br />
                         <label>Department:</label> <select ng-model='positions[positionIndex].department'><option></option><option ng-repeat='dept in departments' value='{{dept.name}}'>{{dept.name}}</option></select>
-                        <button class='btn btn-primary' ng-click='run()'>Update Position</button>
+                        <button class='btn btn-primary' ng-click='updatePosition(positionIndex)'>Update Position</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "removePosition"'>
                         <label>Name:</label> <select ng-model='positionIndex'><option ng-repeat='position in positions' value='{{position.code}}'>{{position.name}}</option></select><br />
-                        <button class='btn btn-primary' ng-click='run()'>Delete Position</button>
+                        <button class='btn btn-primary' ng-click='deletePosition(positionIndex)'>Delete Position</button>
                     </div>                     
                 </div>                
             </div>
@@ -88,7 +89,10 @@
                     <div class='btn-group-vertical col-xs-6'>
                         <button class='btn btn-primary' ng-click="setOperation('commissionStarship')">Create Starship</button>
                         <button class='btn btn-alternate' ng-click="setOperation('updateStarship')">Update Starship</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('decommissionStarship')">Remove Starship</button> 
+                        <button class='btn btn-alternate' ng-click="setOperation('decommissionStarship')">Decommission Starship</button> 
+                        <button class='btn btn-alternate' ng-click="setOperation('destroyStarship')">Destroy Starship</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('showAllStarships')">Show All Starships</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('getSpeciesOnStarship')">Show All Species on Starship</button>
                     </div> 
 
                     <div class='col-xs-6' ng-show='operation === "commissionStarship"'>
@@ -99,12 +103,20 @@
                     <div class='col-xs-6' ng-show='operation === "updateStarship"'>   
                         <label>Name:</label> <select ng-model='shipIndex'><option></option><option ng-repeat='ship in starships track by $index' value='{{$index}}'>{{ship.name}}</option></select>
                         <label>Class:</label> <select ng-model='starships[shipIndex].class' /><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select>
-                        <button class='btn btn-primary' ng-click='run()'>Update Starship</button>
+                        <button class='btn btn-primary' ng-click='updateStarship(shipIndex)'>Update Starship</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "decommissionStarship"'>
-                        <label>Name:</label> <select ng-model='shipIndex'><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select>
-                        <button class='btn btn-primary' ng-click='run()'>Decommission Starship</button>
-                    </div>                    
+                        <label>Name:</label> <select ng-model='shipIndex' ng-change="showIndex(shipIndex)"><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select>
+                        <button class='btn btn-primary' ng-click='decommissionStarship(shipIndex)'>Decommission Starship</button>
+                    </div> 
+                    <div class='col-sx-6' ng-show='operation === "destroyStarship"'>
+                        <label>Name: </label> <select ng-model='shipIndex'><option ng-repeat='ship in starships ' value='{{ship.registryNumber}}'>{{ship.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='destroyStarship(shipIndex)'>Destroy Starship</button>
+                    </div>
+                    <div class="col-sx-6" ng-show='operation === "getSpeciesOnStarship"'>
+                        <label>Name:</label> <select ng-model='registryNumber'><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='getSpeciesOnStarship(registryNumber)'>View Species</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,7 +127,8 @@
                     <div class='btn-group-vertical col-xs-6'>
                         <button class='btn btn-primary' ng-click="setOperation('createClass')">Create Class</button>
                         <button class='btn btn-alternate' ng-click="setOperation('updateClass')">Update Class</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('deleteClass')">Remove Class</button>      
+                        <button class='btn btn-alternate' ng-click="setOperation('deleteClass')">Remove Class</button> 
+                        <button class='btn btn-alternate' ng-click="setOperation('getClassesByTechLevel'); run()">Get Classes By Tech Level</button>
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createClass"'>
@@ -134,32 +147,32 @@
                         </div>
                         <div ng-if='newClass.category === "Science"'>
                             <label>Sensor Range:</label> <input type='text' ng-model='newClass.sensorRange' /><br />
-                            <label>Lab Type:</label> <input type='text' ng-model='newclass.labType' /><br />                            
+                            <label>Lab Type:</label> <input type='text' ng-model='newClass.labType' /><br />                            
                         </div>
                         <button class='btn btn-primary' ng-click='run()'>Create Class</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "updateClass"'>
-                        <label>Name:</label> <select ng-model='classIndex' /><option></option><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
+                        <label>Name:</label> <select ng-model='classIndex'/><option></option><option ng-repeat='class in classes track by $index' value='{{$index}}'>{{class.name}}</option></select><br />
                         <label>New Class:</label> <input type='text' ng-model='classes[classIndex].crewSize' /><br />
                         <label>Max Speed:</label> <input type='text' ng-model='classes[classIndex].maxSpeed' /><br />
                         <label>Fuel Capacity:</label> <input type='text' ng-model='classes[classIndex].fuelCapacity' /><br />
                         <label>Tech Level:</label> <select ng-model='classes[classIndex].techLevel'><option ng-repeat='level in techLevel' value='{{level}}'>{{level}}</option></select>
-                        <div ng-if='updateClass.category === "Battleship"'>
+                        <div ng-if='classes[classIndex].category === "Battleship"'>
                             <label>Phaser Strength:</label> <input type='text' ng-model='classes[classIndex].phaserStrength' /><br />
                             <label>Torpedo Type:</label> <input type='text' ng-model='classes[classIndex].torpedoType' /><br />
                         </div>
-                        <div ng-if='updateClass.category === "Explorer"'>
+                        <div ng-if='classes[classIndex].category === "Explorer"'>
                             <label>Region Specialty:</label> <input type='text' ng-model='classes[classIndex].regionSpecialty' /><br />
                         </div>
-                        <div ng-if='updateClass.category === "Science"'>
+                        <div ng-if='classes[classIndex].category === "Science"'>
                             <label>Sensor Range:</label> <input type='text' ng-model='classes[classIndex].sensorRange' /><br />
                             <label>Lab Type:</label> <input type='text' ng-model='classes[classIndex].labType' /><br />                            
                         </div> 
-                        <button class='btn btn-primary' ng-click='run()'>Update Class</button>
+                        <button class='btn btn-primary' ng-click='updateClas(classIndex)'>Update Class</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "deleteClass"'>
                         <label>Name:</label> <select ng-model='classIndex'><option ng-repeat='class in classes' value='{{class.id}}'>{{class.name}}</option></select><br />
-                        <button class='btn btn-primary' ng-click='run()'>Delete Class</button>
+                        <button class='btn btn-primary' ng-click='deleteClass(classIndex)'>Delete Class</button>
                     </div>  
                     
                 </div>
@@ -232,10 +245,66 @@
                         </tr>
                         <tr ng-repeat='position in vacantPositions'>
                             <td>{{position.name}}</td>
-                            <th>{{position.position_name}}</td>
+                            <td>{{position.position_name}}</td>
                         </tr>
                     </table>
                 </div>
+                
+                <div ng-show='operation === "showAllStarships"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Registry Number</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                        </tr>
+                        <tr ng-repeat='ship in starships'>
+                            <td>NCC-{{ship.registryNumber}}</td>
+                            <td>U.S.S. {{ship.name}}</td>
+                            <td>{{ship.className}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div ng-show='operation === "getClassesByTechLevel"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Name</th>
+                            <th>Tech Level</th>
+                        </tr>
+                        <tr ng-repeat='class in classesByTechLevel'>
+                            <td>{{class.name}}</td>
+                            <td>{{class.techLevel}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div ng-show='operation === "getSpeciesOnStarship"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Species</th>
+                            <th>Count</th>
+                        </tr>
+                        <tr ng-repeat='species in speciesOnStarship'>
+                            <td>{{species.name}}</td>
+                            <td>{{species.cnt}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div ng-show='operation === "getOfficersInDepartmentBySpecies"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Department</th>
+                            <th>Count</th>
+                        </tr>
+                        <tr ng-repeat='dept in deptBySpecies'>
+                            <td>{{dept.department}}</td>
+                            <td>{{dept.cnt}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                
             </div>
         </div>
     </div>
