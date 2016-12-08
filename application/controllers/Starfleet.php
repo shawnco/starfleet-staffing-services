@@ -170,4 +170,27 @@ class Starfleet extends MY_Controller {
         public function getOfficersInDepartmentBySpecies(){
             echo json_encode($this->Starfleet_model->getOfficersInDepartmentBySpecies());
         }
+        
+        // Get crew of ship
+        public function getShipCrew(){
+            $registryNumber = $this->input->get('registryNumber');
+            echo json_encode($this->Starfleet_model->getShipCrew($registryNumber));
+        }
+        
+        // Get all unassigned officers
+        public function getUnassignedOfficers(){
+            echo json_encode($this->getUnassignedOfficers());
+        }
+        
+        // Get all ships with a vacancy
+        public function getShipsWithVacancy(){
+            $code = $this->input->get('code');
+            echo json_encode($this->Starfleet_model->getShipsWithVacancy($code));
+        }
+        
+        // Get all officers best for position
+        public function getOfficersForPosition(){
+            $code = $this->input->get('code');
+            echo json_encode($this->Starfleet_model->getOfficersForPosition($code));
+        }
 }

@@ -16,6 +16,7 @@
                         <button class='btn btn-alternate' ng-click="setOperation('listAllOfficersBySpecies'); run();">List All Officers By Species</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listAllUnassignedOfficers')">List All Unassigned Officers</button>
                         <button class='btn btn-alternate' ng-click="setOperation('getOfficersInDepartmentBySpecies'); run()">List All Officers in Dept By Species</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('getUnassignedOfficers'); run()">Get Unassigned Officers</button>
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createOfficer"'>
@@ -55,6 +56,8 @@
                         <button class='btn btn-alternate' ng-click="setOperation('updatePosition')">Update Position</button>
                         <button class='btn btn-alternate' ng-click="setOperation('removePosition')">Remove Position</button>      
                         <button class='btn btn-alternate' ng-click="setOperation('listAllVacantPositions')">List All Vacant Positions</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('getShipsWithVacancy')">List Ships with Vacancy</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('getOfficersForPosition')">Get Officers for Position</button>
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createPosition"'>
@@ -76,7 +79,15 @@
                     <div class='col-xs-6' ng-show='operation === "removePosition"'>
                         <label>Name:</label> <select ng-model='positionIndex'><option ng-repeat='position in positions' value='{{position.code}}'>{{position.name}}</option></select><br />
                         <button class='btn btn-primary' ng-click='deletePosition(positionIndex)'>Delete Position</button>
-                    </div>                     
+                    </div>      
+                    <div class='col-xs-6' ng-show='operation === "getShipsWithVacancy"'>
+                        <label>Position:</label> <select ng-model='positionCode'><option ng-repeat='position in positions' value='{{position.code}}'>{{position.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='getShipsWithVacancy(positionCode)'>Get Ships with Vacancy</button>
+                    </div>
+                    <div class='col-sx-6' ng-show='operation === "getOfficersForPosition"'>
+                        <label>Position</label> <select ng-model='positionCode'><option ng-repeat='position in positions' value='{{position.code}}'>{{position.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='getOfficersForPosition(positionCode)'>Get Officers</button>
+                    </div>
                 </div>                
             </div>
         </div>
@@ -93,6 +104,7 @@
                         <button class='btn btn-alternate' ng-click="setOperation('destroyStarship')">Destroy Starship</button>
                         <button class='btn btn-alternate' ng-click="setOperation('showAllStarships')">Show All Starships</button>
                         <button class='btn btn-alternate' ng-click="setOperation('getSpeciesOnStarship')">Show All Species on Starship</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('getShipCrew')">Get Ship Crew</button>
                     </div> 
 
                     <div class='col-xs-6' ng-show='operation === "commissionStarship"'>
@@ -117,6 +129,10 @@
                         <label>Name:</label> <select ng-model='registryNumber'><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select><br />
                         <button class='btn btn-primary' ng-click='getSpeciesOnStarship(registryNumber)'>View Species</button>
                     </div>
+                    <div class='col-sm-6' ng-show='operation === "getShipCrew"'>
+                        <label>Name:</label> <select ng-model='registryNumber'><option ng-repeat='ship in starships' value='{{ship.registryNumber}}'>{{ship.name}}</option></select><br />
+                        <button class='btn btn-primary' ng-click='getShipCrew(registryNumber)'>Get Crew</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,6 +145,7 @@
                         <button class='btn btn-alternate' ng-click="setOperation('updateClass')">Update Class</button>
                         <button class='btn btn-alternate' ng-click="setOperation('deleteClass')">Remove Class</button> 
                         <button class='btn btn-alternate' ng-click="setOperation('getClassesByTechLevel'); run()">Get Classes By Tech Level</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('listClasses');">List All Classes</button>
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createClass"'>
@@ -256,11 +273,13 @@
                             <th>Registry Number</th>
                             <th>Name</th>
                             <th>Class</th>
+                            <th>Crew Size</th>
                         </tr>
                         <tr ng-repeat='ship in starships'>
                             <td>NCC-{{ship.registryNumber}}</td>
                             <td>U.S.S. {{ship.name}}</td>
-                            <td>{{ship.className}}</td>
+                            <td>{{ship.class}}</td>
+                            <td>{{ship.crewSize}}</td>
                         </tr>
                     </table>
                 </div>
@@ -304,6 +323,85 @@
                     </table>
                 </div>
                 
+                <div ng-show='operation === "getShipCrew"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Position</th>
+                            <th>Rank</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Species</th>
+                            <th>Tech Level</th>
+                        </tr>
+                        <tr ng-repeat='crew in shipCrew'>
+                            <td>{{crew.rank}}</td>
+                            <td>{{crew.station}}</td>
+                            <td>{{crew.fname}}</td>
+                            <td>{{crew.lname}}</td>
+                            <td>{{crew.species}}</td>
+                            <td>{{crew.techLevel}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div ng-show='operation === "getUnassignedOfficers"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Rank</th>
+                            <th>Species</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr ng-repeat='officer in unassignedOfficers'>
+                            <td>{{officer.lname}}</td>
+                            <td>{{officer.fname}}</td>
+                            <td>{{officer.rank}}</td>
+                            <td>{{officer.species}}</td>
+                            <td>{{officer.status}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div ng-show='operation === "listClasses"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Name</th>
+                            <th>Tech Level</th>
+                            <th>Crew Size</th>
+                            <th>Max Speed</th>
+                            <th>Fuel Capacity</th>
+                        </tr>
+                        <tr ng-repeat='class in classes'>
+                            <td>{{class.name}}</td>
+                            <td>{{class.techLevel}}</td>
+                            <td>{{class.crewSize}}</td>
+                            <td>{{class.maxSpeed}}</td>
+                            <td>{{class.fuelCapacity}}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div ng-show='operation === "getOfficersForPosition"'>
+                    <table class='table'>
+                        <tr>
+                            <th>Rank</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Experience</th>
+                            <th>Species</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr ng-repeat='officer in officersForPosition'>
+                            <td>{{officer.Rank}}</td>
+                            <td>{{officer.First}}</td>
+                            <td>{{officer.Last}}</td>
+                            <td>{{officer.Exp}}</td>
+                            <td>{{officer.Species}}</td>
+                            <td>{{officer.Status}}</td>
+                        </tr>
+                    </table>
+                </div>
                 
             </div>
         </div>

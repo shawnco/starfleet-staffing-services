@@ -100,6 +100,30 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         });
     };
     
+    $scope.getShipCrew = function(index){
+        StarfleetService.runQuery('getShipCrew', {registryNumber: index}).then(function(data){
+            operationList.getShipCrew.resolve(data);
+        },function(data){
+            operationList.getShipCrew(data);
+        });
+    };
+    
+    $scope.getShipsWithVacancy = function(code){
+        StarfleetService.runQuery('getShipsWithVacancy', {code: code}).then(function(data){
+            operationList.getShipsWithVacancy.resolve(data);
+        },function(data){
+            operationList.getShipsWithVacancy.reject(data);
+        });
+    };
+    
+    $scope.getOfficersForPosition = function(code){
+        StarfleetService.runQuery('getOfficersForPosition', {code: code}).then(function(data){
+            operationList.getOfficersForPosition.resolve(data);
+        },function(data){
+            operationList.getOfficersForPosition.reject(data);
+        });
+    };
+    
     // Program title
     $scope.title = 'Starfleet Staffing Services';
     
@@ -144,16 +168,6 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         $scope.positions = data.positions;
         $scope.departments = data.departments;
         
-        // Add class names to starship listings
-        var classes = {};
-        angular.forEach($scope.classes, function(value,key){
-            console.log(key);
-            classes[key] = value.name;
-        });
-        angular.forEach($scope.starships, function(value,key){
-            value.className = classes[value.class];
-        });
-        
         // Objects used for the views
         $scope.newOfficer = {};
         $scope.existingOfficer = {};
@@ -193,7 +207,11 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
             'deletePosition': {data: {}, method: 'createPosition', resolve:function(data){alertSuccess('Position deleted!');},reject:function(data){alertFailure('Unable to delete position!');}},
             'getClassesByTechLevel': {data:{}, method:'getClassesByTechLevel', resolve:function(data){$scope.classesByTechLevel = data;}, reject:function(data){alertFailure('Unable to get classes!');}},
             'getSpeciesOnStarship': {data:$scope.registryNumber, method:'getSpeciesOnStarship', resolve:function(data){$scope.speciesOnStarship = data;}, reject:function(data){alertFailure('Unable to get species count!')}},
-            'getOfficersInDepartmentBySpecies': {data:{}, method:'getOfficersInDepartmentBySpecies', resolve:function(data){$scope.deptBySpecies = data;}, reject:function(data){alertFailure('Unable to retrieve species information!');}}
+            'getOfficersInDepartmentBySpecies': {data:{}, method:'getOfficersInDepartmentBySpecies', resolve:function(data){$scope.deptBySpecies = data;}, reject:function(data){alertFailure('Unable to retrieve species information!');}},
+            'getShipCrew': {method:'getShipCrew', resolve:function(data){$scope.shipCrew = data;}, reject:function(data){alertFailure('Unable to get ship crew!');}},
+            'getUnassignedOfficers': {method:'getUnassignedOfficers', resolve:function(data){$scope.unassignedOfficers = data;}, reject:function(data){alertFailure('Unable to get unassigned officers!');}},
+            'getShipsWithVacancy': {method:'getShipsWithVacancy', resolve:function(data){$scope.shipsWithVacancy = data;}, reject:function(data){alertFailure('Unable to get ships with vacant position!');}},
+            'getOfficersForPosition': {method:'getOfficersForPosition', resolve:function(data){$scope.officersForPosition = data;}, reject:function(data){alertFailure('Unable to get officers for position!');}}
         };
         
     },function(data){

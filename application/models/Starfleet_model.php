@@ -12,8 +12,7 @@ class Starfleet_model extends CI_Model {
         $output['ranks'] = $this->db->query('SELECT * FROM Rank')->result_array();
         $output['species'] = $this->db->query('SELECT * FROM Species ORDER BY name')->result_array();
         $output['officers'] = $this->db->query('SELECT * FROM Officers ORDER BY lname, fname, serviceNumber')->result_array();
-        //$output['classes'] = $this->db->query('SELECT * FROM Class ORDER BY id')->result_array();
-        $output['starships'] = $this->db->query('SELECT * FROM Starship ORDER BY name')->result_array();
+        $output['starships'] = $this->db->query("select ship.registryNumber, ship.name, c.name as class, c.crewSize from Starship ship join Class c on c.id = ship.class order by ship.registryNumber ASC")->result_array();
         $output['positions'] = $this->db->query('SELECT * FROM Station ORDER BY name')->result_array();
         $output['departments'] = $this->db->query('SELECT * FROM Department ORDER BY name')->result_array();
         
@@ -28,7 +27,6 @@ class Starfleet_model extends CI_Model {
             // Get the information for that category and add it to the ship.
             if($category !== FALSE){
                 $result = $this->db->query("SELECT * FROM $category WHERE id = $id")->row();
-//                echo'<br /><br />';var_dump($result);echo '<br /><br />';
                 foreach($result as $key => $row){
                     $classes[$k][$key] = $row;
                 }
@@ -162,6 +160,78 @@ class Starfleet_model extends CI_Model {
     public function getOfficersInDepartmentBySpecies(){
         return $this->db->query("select station.department, count(*) as cnt from Officers officers join Assignment assign on assign.officerID = officers.serviceNumber join Station station on station.code = assign.StationID join Species species on species.code = officers.species group by species.name")->result_array();
     }
+    
+    // Get crew of ship
+    public function getShipCrew($registryNumber){
+        return $this->db->query("select fname, lname, rank, techLevel, species, Station.name as station from Starship starship join Assignment assignment on assignment.starshipId = starship.registryNumber join station on assignment.StationId = station.code  join Officers officers on officers.serviceNumber = assignment.officerId where starship.registryNumber = $registryNumber")->result_array();
+    }
+    
+    // Get all unassigned officers
+    public function getUnassignedOfficers(){
+        return $this->db->query("select officers.lname, officers.fname, rank.title as rank, species.name as species, officers.status from Officers officers join Species species on species.code = officers.species join Rank rank on rank.number = officers.rank where officers.serviceNumber not in (select officerID from Assignment where officerID is not null) order by officers.lname ASC")->result_array();
+    }
+    
+    // Get all ships with vacancy
+    public function getShipsWithVacancy($code){
+        return $this->db->query("SELECT starship.name FROM Starship starship JOIN Assignment assignment ON assignment.starshipId = starship.registryNumber WHERE assignment.officerId = NULL AND assignment.stationId = '$code'")->result_array();
+    }
+    
+    // Find best officers for a position
+    public function getOfficersForPosition($station){
+        return $this->db->query("set @station := '$station';
+select officers.lname as Last, 
+officers.fname as First, 
+rank.title as Rank, 
+officers.experience as Exp,
+species.name as Species, 
+officers.status as Status
+from Officers officers
+join Species species
+	on species.code = officers.species
+join Rank rank
+	on rank.number = officers.rank
+where officers.serviceNumber not in
+(select officerID from Assignment where officerID is not null)
+and officers.rank = 
+(select suggestedRank from Station where code = @station)
+union
+select 		officers.lname as Last, 
+officers.fname as First, 
+rank.title as Rank, 
+officers.experience as Exp,
+species.name as Species, 
+officers.status as Status
+from Officers officers
+join Species species
+	on species.code = officers.species
+join Rank rank
+	on rank.number = officers.rank
+where officers.serviceNumber not in
+(select officerID from Assignment where officerID is not null)
+and officers.rank = 
+(select suggestedRank from Station where code = @station)+1
+union
+select 		officers.lname as Last, 
+officers.fname as First, 
+rank.title as Rank, 
+officers.experience as Exp,
+species.name as Species, 
+officers.status as Status
+from Officers officers
+join Species species
+	on species.code = officers.species
+join Rank rank
+	on rank.number = officers.rank
+where officers.serviceNumber not in
+(select officerID from Assignment where officerID is not null)
+and officers.rank = 
+(select suggestedRank from Station where code = @station)-1")->result_array();
+    }
+    
+    
+    
+    
+    
     
     // Get the category of the ship
     private function getCategory($id){
