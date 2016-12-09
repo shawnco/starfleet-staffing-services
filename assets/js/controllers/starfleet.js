@@ -199,7 +199,7 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
             'updateClass': {data: $scope.updateClass, method: 'updateClass', resolve: function(data){alertSuccess('Class updated!');}, reject: function(data){alertFailure('Unable to update class!');}},
             'deleteClass': {data: $scope.classToDelete, method: 'deleteClass', resolve: function(data){alertSuccess('Class deleted!');}, reject: function(data){alertFailure('Unable to delete class!');}},
             'listAllOfficersBySpecies': {data: {}, method: 'getAllOfficersBySpecies', resolve: function(data){$scope.speciesCount = data;}, reject: function(data){alertFailure('Unable to get officers');}},
-            'listAllUnassignedOfficers': {data: {}, method: 'getAllUnassignedOfficers', resolve: function(data){$scope.unassignedOfficers = data;}, reject: function(data){alertFailure('Unable to get unassigned officers!');}},
+            'listAllUnassignedOfficers': {data: {}, method: 'getAllUnassignedOfficers', resolve: function(data){$scope.unassignedOfficers = data;console.log(data);}, reject: function(data){alertFailure('Unable to get unassigned officers!');}},
             'listAllVacantPositions': {data: {}, method: 'getAllVacantPositions', resolve: function(data){$scope.vacantPositions = data;}, reject: function(data){alertFailure('Unable to get vacant  positions!');}},
             'destroyStarship': {data: {}, method: 'destroyStarship', resolve: function(data){alertSuccess('Starship was destroyed with all crew lost!');}, reject: function(data){alertFailure('Unable to destroy starship!');}},
             'createPosition': {data: $scope.newPosition, method: 'createPosition', resolve:function(data){alertSuccess('Position created!');},reject:function(data){alertFailure('Unable to create position!');}},
@@ -207,9 +207,8 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
             'deletePosition': {data: {}, method: 'createPosition', resolve:function(data){alertSuccess('Position deleted!');},reject:function(data){alertFailure('Unable to delete position!');}},
             'getClassesByTechLevel': {data:{}, method:'getClassesByTechLevel', resolve:function(data){$scope.classesByTechLevel = data;}, reject:function(data){alertFailure('Unable to get classes!');}},
             'getSpeciesOnStarship': {data:$scope.registryNumber, method:'getSpeciesOnStarship', resolve:function(data){$scope.speciesOnStarship = data;}, reject:function(data){alertFailure('Unable to get species count!')}},
-            'getOfficersInDepartmentBySpecies': {data:{}, method:'getOfficersInDepartmentBySpecies', resolve:function(data){$scope.deptBySpecies = data;}, reject:function(data){alertFailure('Unable to retrieve species information!');}},
+            'getOfficersInDepartmentBySpecies': {data:{}, method:'getOfficersInDepartmentBySpecies', resolve:function(data){$scope.deptBySpecies = data;console.log(data);}, reject:function(data){alertFailure('Unable to retrieve species information!');}},
             'getShipCrew': {method:'getShipCrew', resolve:function(data){$scope.shipCrew = data;}, reject:function(data){alertFailure('Unable to get ship crew!');}},
-            'getUnassignedOfficers': {method:'getUnassignedOfficers', resolve:function(data){$scope.unassignedOfficers = data;}, reject:function(data){alertFailure('Unable to get unassigned officers!');}},
             'getShipsWithVacancy': {method:'getShipsWithVacancy', resolve:function(data){$scope.shipsWithVacancy = data;}, reject:function(data){alertFailure('Unable to get ships with vacant position!');}},
             'getOfficersForPosition': {method:'getOfficersForPosition', resolve:function(data){$scope.officersForPosition = data;}, reject:function(data){alertFailure('Unable to get officers for position!');}}
         };

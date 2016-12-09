@@ -14,9 +14,8 @@
                         <button class='btn btn-alternate' ng-click="setOperation('deleteOfficer')">Remove Officer</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listAllOfficers')">List All Officers</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listAllOfficersBySpecies'); run();">List All Officers By Species</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('listAllUnassignedOfficers')">List All Unassigned Officers</button>
+                        <button class='btn btn-alternate' ng-click="setOperation('listAllUnassignedOfficers'); run();">List All Unassigned Officers</button>
                         <button class='btn btn-alternate' ng-click="setOperation('getOfficersInDepartmentBySpecies'); run()">List All Officers in Dept By Species</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('getUnassignedOfficers'); run()">Get Unassigned Officers</button>
                     </div>
                     
                     <div class='col-xs-6' ng-show='operation === "createOfficer"'>
@@ -246,10 +245,10 @@
                             <th>Species</th>
                         </tr>
                         <tr ng-repeat='officer in unassignedOfficers'>
-                            <td>{{officer.rank}}</td>
+                            <td>{{officer.title}}</td>
                             <td>{{officer.fname}}</td>
                             <td>{{officer.lname}}</td>
-                            <td>{{officer.species}}</td>
+                            <td>{{officer.name}}</td>
                         </tr>
                     </table>
                 </div>
@@ -340,25 +339,6 @@
                             <td>{{crew.lname}}</td>
                             <td>{{crew.species}}</td>
                             <td>{{crew.techLevel}}</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <div ng-show='operation === "getUnassignedOfficers"'>
-                    <table class='table'>
-                        <tr>
-                            <th>Last Name</th>
-                            <th>First Name</th>
-                            <th>Rank</th>
-                            <th>Species</th>
-                            <th>Status</th>
-                        </tr>
-                        <tr ng-repeat='officer in unassignedOfficers'>
-                            <td>{{officer.lname}}</td>
-                            <td>{{officer.fname}}</td>
-                            <td>{{officer.rank}}</td>
-                            <td>{{officer.species}}</td>
-                            <td>{{officer.status}}</td>
                         </tr>
                     </table>
                 </div>
