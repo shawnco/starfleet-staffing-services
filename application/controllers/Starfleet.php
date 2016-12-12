@@ -136,7 +136,8 @@ class Starfleet extends MY_Controller {
         }        
         
         // Delete position
-        public function deletePosition($code){
+        public function deletePosition(){
+            $code = $this->input->get('code');
             echo json_encode($this->Starfleet_model->deletePosition($code));
         }
         

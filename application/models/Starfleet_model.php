@@ -39,7 +39,12 @@ class Starfleet_model extends CI_Model {
     
     // Adds an officer to the database.
     public function createOfficer($fname, $lname, $rank, $techLevel, $species, $status){
-        return $this->db->query("INSERT INTO Officers (fname, lname, rank, techLevel, species, status) VALUES ('$fname', '$lname', $rank, $techLevel, $species, '$status')");
+        $result = $this->db->query("INSERT INTO Officers (fname, lname, rank, techLevel, species, status) VALUES ('$fname', '$lname', $rank, $techLevel, $species, '$status')");
+        if($result === TRUE){
+            return $this->db->insert_id();
+        }else{
+            return FALSE;
+        }
     }
     
     // Updates an officer in the database.
@@ -49,7 +54,10 @@ class Starfleet_model extends CI_Model {
     
     // Delete an officer
     public function deleteOfficer($id){
-        return $this->db->query("DELETE FROM Officers WHERE serviceNumber = $id");
+        // Find where they are assigned and set that to null
+        $unassignUpdate = $this->db->query("UPDATE Assignment SET officerId = NULL WHERE officerId = $id");
+        $deleteOfficer = $this->db->query("DELETE FROM Officers WHERE serviceNumber = $id");
+        return $unassignUpdate && $deleteOfficer;
     }
     
     // Commission starship
@@ -68,7 +76,11 @@ class Starfleet_model extends CI_Model {
                 $officer = $this->getOfficersForPosition($code)[0]['serviceNumber'];
                 $crewResult = $this->db->query("INSERT INTO Assignment (stationCode, starshipId, officerId) values ('$code', $id, $officer)");
             }
-            return $insertResult && $crewResult;
+            if($insertResult && $crewResult){
+                return $id;
+            }else{
+                return FALSE;
+            }
         }else{
             return $insertResult;
         }
@@ -100,7 +112,11 @@ class Starfleet_model extends CI_Model {
         $createClass = $this->db->query("INSERT INTO Class (name, crewSize, maxSpeed, fuelCapacity, techLevel) VALUES ('$name', $crewSize, $maxSpeed, $fuelCapacity, $techLevel)");
         $id = $this->db->insert_id();
         $createBattleship = $this->db->query("INSERT INTO Battleship (id, phaserStrength, torpedoType) VALUES ($id, $phaserStrength, $torpedoType)");
-        return $createBattleship && $createClass;
+        if($createBattleship && $createClass){
+            return $id;
+        }else{
+            return FALSE;
+        }
     }
      
     // Create an explorer

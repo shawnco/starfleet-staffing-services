@@ -142,7 +142,7 @@
                     <div class='btn-group-vertical col-xs-6'>
                         <button class='btn btn-primary' ng-click="setOperation('createClass')">Create Class</button>
                         <button class='btn btn-alternate' ng-click="setOperation('updateClass')">Update Class</button>
-                        <button class='btn btn-alternate' ng-click="setOperation('deleteClass')">Remove Class</button> 
+                        <!--<button class='btn btn-alternate' ng-click="setOperation('deleteClass')">Remove Class</button>--> 
                         <button class='btn btn-alternate' ng-click="setOperation('getClassesByTechLevel'); run()">Get Classes By Tech Level</button>
                         <button class='btn btn-alternate' ng-click="setOperation('listClasses');">List All Classes</button>
                     </div>
@@ -168,7 +168,7 @@
                         <button class='btn btn-primary' ng-click='run()'>Create Class</button>
                     </div>
                     <div class='col-xs-6' ng-show='operation === "updateClass"'>
-                        <label>Name:</label> <select ng-model='classIndex'/><option></option><option ng-repeat='class in classes track by $index' value='{{$index}}'>{{class.name}}</option></select><br />
+                        <label>Name:</label> <select ng-model='classIndex' /><option></option><option ng-repeat='class in classes track by $index' value='{{$index}}'>{{class.name}}</option></select><br />
                         <label>New Class:</label> <input type='text' ng-model='classes[classIndex].crewSize' /><br />
                         <label>Max Speed:</label> <input type='text' ng-model='classes[classIndex].maxSpeed' /><br />
                         <label>Fuel Capacity:</label> <input type='text' ng-model='classes[classIndex].fuelCapacity' /><br />

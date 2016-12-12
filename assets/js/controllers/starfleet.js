@@ -29,6 +29,15 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     $scope.deleteOfficer = function(index){
         StarfleetService.runQuery('deleteOfficer', {serviceNumber: index}).then(function(data){
             operationList.deleteOfficer.resolve(data);
+            
+            // Scan through the officer list and remove the officer.
+            angular.forEach($scope.officers, function(value,key){
+                if(value.serviceNumber === index){
+                    console.log('found them at ' + key);
+                    $scope.officers.splice(key,1);
+                }
+            }); 
+            console.log($scope.officers);
         },function(data){
             operationList.deleteOfficer.reject(data);
         });
@@ -46,6 +55,13 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         console.log(index);
         StarfleetService.runQuery('decommissionStarship', {registryNumber: index}).then(function(data){
             operationList.decommissionStarship.resolve(data);
+            
+            // Scan through the starships and remove this one.
+            angular.forEach($scope.starships, function(value,key){
+                if(value.registryNumber === index){
+                    $scope.starships.splice(key,1);
+                }
+            });
         },function(data){
             operationList.decommissionStarship.reject(data);
         });
@@ -63,6 +79,11 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         StarfleetService.runQuery('deleteClass', {id: index}).then(function(data){
             console.log(data);
             operationList.deleteClass.resolve(data);
+            angular.forEach($scope.classes, function(value,key){
+                if(value.id === index){
+                    $scope.classes.splice(key,1);
+                }
+            });
         },function(data){
             operationList.deleteClass.reject(data);
         });
@@ -71,6 +92,11 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     $scope.destroyStarship = function(index){
         StarfleetService.runQuery('destroyStarship', {registryNumber: index}).then(function(data){
             operationList.destroyStarship.resolve(data);
+            angular.forEach($scope.starships, function(value,key){
+                if(value.registryNumber === index){
+                    $scope.starships.splice(key,1);
+                }
+            });
         },function(data){
             operationList.destroyStarship.reject(data);
         });
@@ -85,8 +111,15 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
     };
     
     $scope.deletePosition = function(index){
-        StarfleetService.runQuery('deletePosition', $scope.positions[index].code).then(function(data){
+        console.log(index);
+        StarfleetService.runQuery('deletePosition', {code: index}).then(function(data){
+            console.log(data);
             operationList.deletePosition.resolve(data);
+            angular.forEach($scope.positions, function(value,key){
+                if(value.code === index){
+                    $scope.positions.splice(key,1);
+                }
+            });
         },function(data){
             operationList.deletePosition.reject(data);
         });
@@ -189,20 +222,20 @@ starfleet.controller('StarfleetController', function($scope, StarfleetService){
         // This is the variable that holds all the forms, their associated data, calls, and functions for handling success and failure.
         // If using this makes things too confusing, feel free to write your own controller and service calls.
         operationList = {
-            'createOfficer': {data: $scope.newOfficer, method: 'createOfficer', resolve: function(data){ alertSuccess('Officer added!'); }, reject: function(data){ alertFailure('Unable to create officer!'); }},
+            'createOfficer': {data: $scope.newOfficer, method: 'createOfficer', resolve: function(data){$scope.newOfficer.serviceNumber = data; var newIdx = $scope.officers.length; $scope.officers[newIdx] = $scope.newOfficer; alertSuccess('Officer added!'); }, reject: function(data){ alertFailure('Unable to create officer!'); }},
             'updateOfficer': {data: $scope.officers[$scope.officerIndex], method: 'updateOfficer', resolve: function(data){alertSuccess('Officer updated!');}, reject: function(data){alertFailure('Unable to update officer!');}},
             'deleteOfficer': {data: $scope.officerIndex, method: 'deleteOfficer', resolve: function(data){alertSuccess('Officer deleted!');}, reject: function(data){alertFailure('Unable to delete officer!');}},
-            'commissionStarship': {data: $scope.newShip, method: 'commissionStarship', resolve: function(data){alertSuccess('New starship added!');}, reject: function(data){alertFailure('Unable to commission starship!');}},
+            'commissionStarship': {data: $scope.newShip, method: 'commissionStarship', resolve: function(data){$scope.newShip.registryNumber = data; var newIdx = $scope.starships.length; $scope.starships[newIdx] = $scope.newShip; alertSuccess('New starship added!');}, reject: function(data){alertFailure('Unable to commission starship!');}},
             'updateStarship': {data: $scope.shipToUpdate, method: 'updateStarship', resolve: function(data){alertSuccess('Starship updated!');}, reject: function(data){alertFailure('Unable to update starship!');}},
             'decommissionStarship': {data: $scope.shipToDecommission, method: 'decommissionStarship', resolve: function(data){alertSuccess('Starship decommissioned!');}, reject: function(data){alertFailure('Unable to decommission starship!');}},
-            'createClass': {data: $scope.newClass, method: 'createClass', resolve: function(data){alertSuccess('Class created!');}, reject: function(data){alertFailure('Unable to create class!');}},
+            'createClass': {data: $scope.newClass, method: 'createClass', resolve: function(data){$scope.newClass.id = data; var newIdx = $scope.classes.length; $scope.classes[newIdx] = $scope.newClass; alertSuccess('Class created!');}, reject: function(data){alertFailure('Unable to create class!');}},
             'updateClass': {data: $scope.updateClass, method: 'updateClass', resolve: function(data){alertSuccess('Class updated!');}, reject: function(data){alertFailure('Unable to update class!');}},
             'deleteClass': {data: $scope.classToDelete, method: 'deleteClass', resolve: function(data){alertSuccess('Class deleted!');}, reject: function(data){alertFailure('Unable to delete class!');}},
             'listAllOfficersBySpecies': {data: {}, method: 'getAllOfficersBySpecies', resolve: function(data){$scope.speciesCount = data;}, reject: function(data){alertFailure('Unable to get officers');}},
             'listAllUnassignedOfficers': {data: {}, method: 'getAllUnassignedOfficers', resolve: function(data){$scope.unassignedOfficers = data;console.log(data);}, reject: function(data){alertFailure('Unable to get unassigned officers!');}},
             'listAllVacantPositions': {data: {}, method: 'getAllVacantPositions', resolve: function(data){$scope.vacantPositions = data;}, reject: function(data){alertFailure('Unable to get vacant  positions!');}},
             'destroyStarship': {data: {}, method: 'destroyStarship', resolve: function(data){alertSuccess('Starship was destroyed with all crew lost!');}, reject: function(data){alertFailure('Unable to destroy starship!');}},
-            'createPosition': {data: $scope.newPosition, method: 'createPosition', resolve:function(data){alertSuccess('Position created!');},reject:function(data){alertFailure('Unable to create position!');}},
+            'createPosition': {data: $scope.newPosition, method: 'createPosition', resolve:function(data){var newIdx = $scope.positions.length; $scope.positions[newIdx] = $scope.newPosition; alertSuccess('Position created!');},reject:function(data){alertFailure('Unable to create position!');}},
             'updatePosition': {data: {}, method: 'createPosition', resolve:function(data){alertSuccess('Position updated!');},reject:function(data){alertFailure('Unable to update position!');}},
             'deletePosition': {data: {}, method: 'createPosition', resolve:function(data){alertSuccess('Position deleted!');},reject:function(data){alertFailure('Unable to delete position!');}},
             'getClassesByTechLevel': {data:{}, method:'getClassesByTechLevel', resolve:function(data){$scope.classesByTechLevel = data;}, reject:function(data){alertFailure('Unable to get classes!');}},
